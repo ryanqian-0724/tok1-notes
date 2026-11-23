@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TOK1 Notes</title>
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --card: #ffffff;
+    --text: #1f2430;
+    --muted: #5d6475;
+    --accent: #2948a8;
+    --accent-soft: #e8edfb;
+    --border: #e2e0d8;
+    --term: #1d3a8a;
+    --note: #fff7e0;
+    --note-border: #e8c766;
+    --ex: #eef7f0;
+    --ex-border: #6bb37e;
+    --ex-label: #2f7a45;
+    --q: #f3effb;
+    --q-border: #9b84d6;
+    --q-label: #5b43a8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #15171c;
+      --card: #1e2128;
+      --text: #e6e8ee;
+      --muted: #9aa1b2;
+      --accent: #8fa8ff;
+      --accent-soft: #252c42;
+      --border: #2e323c;
+      --term: #a9bcff;
+      --note: #2c2716;
+      --note-border: #7a6420;
+      --ex: #1a2a20;
+      --ex-border: #3f8a57;
+      --ex-label: #7fd49a;
+      --q: #241f33;
+      --q-border: #6e5ab0;
+      --q-label: #c2b2f5;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .layout { display: flex; max-width: 1200px; margin: 0 auto; }
+  nav {
+    position: sticky; top: 0; align-self: flex-start;
+    width: 250px; height: 100vh; overflow-y: auto;
+    padding: 28px 16px; border-right: 1px solid var(--border);
+  }
+  nav h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 12px; }
+  nav a {
+    display: block; padding: 6px 10px; border-radius: 6px;
+    color: var(--text); text-decoration: none; font-size: 14px;
+  }
+  nav a:hover { background: var(--accent-soft); color: var(--accent); }
+  nav a span { color: var(--muted); font-size: 12px; display: block; }
+  main { flex: 1; padding: 28px 32px 80px; min-width: 0; }
+  header h1 { margin: 0 0 4px; font-size: 32px; }
+  header p { margin: 0 0 10px; color: var(--muted); }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 28px; font-size: 13px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  section {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 28px; margin-bottom: 24px;
+    scroll-margin-top: 16px;
+  }
+  .lesson-tag {
+    display: inline-block; font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 3px 10px; border-radius: 999px; margin-bottom: 6px;
+  }
+  .src { font-size: 13px; color: var(--muted); margin: -10px 0 14px; }
+  section > h2 { margin: 4px 0 16px; font-size: 24px; }
+  h3 { font-size: 17px; margin: 24px 0 10px; color: var(--accent); }
+  dl { margin: 0; }
+  dl.defs > div {
+    display: grid; grid-template-columns: 210px 1fr; gap: 14px;
+    padding: 10px 0; border-bottom: 1px dashed var(--border);
+  }
+  dl.defs > div:last-child { border-bottom: none; }
+  dt { font-weight: 650; color: var(--term); }
+  dt small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+  dd { margin: 0; }
+  dd ul { margin: 6px 0 0; padding-left: 20px; }
+  ul, ol { padding-left: 22px; }
+  li { margin: 3px 0; }
+  .ex, .q {
+    display: block; margin-top: 8px;
+    padding: 6px 12px; border-radius: 6px; font-size: 14.5px;
+  }
+  .ex { background: var(--ex); border-left: 3px solid var(--ex-border); }
+  .q { background: var(--q); border-left: 3px solid var(--q-border); }
+  .ex::before, .q::before {
+    display: block; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .ex::before { content: "Example"; color: var(--ex-label); }
+  .q::before { content: "Think about"; color: var(--q-label); }
+  .q ul { margin: 2px 0 0; padding-left: 18px; }
+  .only {
+    display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .03em;
+    color: var(--muted); border: 1px dashed var(--muted); border-radius: 999px;
+    padding: 0 8px; margin-left: 6px; vertical-align: middle; white-space: nowrap;
+  }
+  dt .only { margin: 4px 0 0; }
+  .note {
+    background: var(--note); border-left: 4px solid var(--note-border);
+    padding: 10px 14px; border-radius: 6px; margin: 14px 0; font-size: 15px;
+  }
+  .arrow { color: var(--accent); font-weight: 700; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .box { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .box h4 { margin: 0 0 6px; color: var(--term); }
+  .box p { margin: 0; font-size: 15px; }
+  .box .sub { color: var(--muted); font-size: 13px; margin-bottom: 6px; }
+  .box ul { margin: 0; padding-left: 18px; font-size: 15px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+  .table-wrap { overflow-x: auto; }
+  .bloom { list-style: none; padding: 0; margin: 0; }
+  .bloom li {
+    display: grid; grid-template-columns: 44px 120px 1fr; gap: 10px; align-items: baseline;
+    padding: 8px 12px; margin: 4px 0; border-radius: 8px; background: var(--accent-soft);
+  }
+  .bloom .n { font-weight: 700; color: var(--accent); }
+  .bloom .t { font-weight: 650; }
+  .bloom .d em { color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; font-size: 14px; background: var(--bg); }
+  .chip.hl { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  ol.prompts { columns: 2; column-gap: 32px; font-size: 14.5px; }
+  ol.prompts li { break-inside: avoid; }
+  details { margin-top: 10px; }
+  summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  svg text { fill: var(--text); font-family: inherit; }
+  svg .ln { stroke: var(--accent); }
+  @media (max-width: 860px) {
+    .layout { display: block; }
+    nav { position: static; width: auto; height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 16px; }
+    nav .links { display: flex; flex-wrap: wrap; gap: 4px; }
+    nav a span { display: none; }
+    main { padding: 20px 16px 60px; }
+    section { padding: 18px 16px; }
+    dl.defs > div { grid-template-columns: 1fr; gap: 2px; }
+    .bloom li { grid-template-columns: 30px 1fr; }
+    .bloom li .d { grid-column: 2; }
+    ol.prompts { columns: 1; }
+  }
+  @media print {
+    nav { display: none; }
+    section { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav>
+    <h2>Contents</h2>
+    <div class="links">
+      <a href="#intro">Lesson 1<span>Introduction to TOK</span></a>
+      <a href="#knower">Lesson 2<span>Who is the knower?</span></a>
+      <a href="#subobj">Lesson 4<span>Subjectivity &amp; objectivity</span></a>
+      <a href="#evalinfo">Lesson 5<span>Evaluating information</span></a>
+      <a href="#whatis">Lesson 6<span>What is knowledge?</span></a>
+      <a href="#types">Lesson 7<span>Types &amp; levels of knowledge</span></a>
+      <a href="#kq">Knowledge questions<span>KQs, map activity, command terms</span></a>
+      <a href="#scope">Lesson 8<span>Knowledge framework: Scope</span></a>
+      <a href="#persp">Lesson 10<span>KF: Perspectives</span></a>
+      <a href="#tools">Lesson 11<span>KF: Methods &amp; tools</span></a>
+      <a href="#relativism">Relativism &amp; absolutism<span>key topic</span></a>
+      <a href="#truth">Theories of truth<span>only in your notes</span></a>
+      <a href="#ethics">Lessons 12 + 13<span>Ethics</span></a>
+      <a href="#assess">Assessment<span>Essay titles &amp; exhibition prompts</span></a>
+    </div>
+  </nav>
+
+  <main>
+    <header>
+      <h1>TOK1 — Course Notes</h1>
+      <p>Built from Anni Ahmavaara’s TOK1 Term 2 slides first, then filled in with your handwritten notes. Lesson numbers follow the slides.</p>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--ex-border)"></i>Example</span>
+        <span><i class="sw" style="background:var(--q-border)"></i>Discussion questions from the slides</span>
+        <span><i class="sw" style="background:var(--note-border)"></i>Note / caution</span>
+        <span><span class="only" style="margin:0">only in your notes</span> not in the slides</span>
+      </div>
+    </header>
+
+    <!-- LESSON 1 -->
+    <section id="intro">
+      <div class="lesson-tag">Lesson 1</div>
+      <h2>Introduction to TOK</h2>
+      <p class="src">Source: TOK1 Lesson 1 slides</p>
+      <dl class="defs">
+        <div><dt>TOK in IB terms</dt><dd><strong>“Knowing about knowing.”</strong> A course about critical thinking and inquiring into the <em>process</em> of knowing, rather than learning a specific body of knowledge.
+          <ul>
+            <li>A core element every DP student takes (at least 100 hours of class time).</li>
+            <li>TOK and the DP subjects should support each other.</li>
+          </ul>
+          <span class="ex">In Chemistry you learn <em>what</em> an atom looks like; in TOK you ask <em>how</em> scientists can know about something nobody has ever seen, and why the atomic model has changed over time.</span></dd></div>
+        <div><dt>How TOK works</dt><dd>
+          <ul style="margin:0">
+            <li>There is no fixed compulsory content — TOK consists mostly of questions, and there are rarely “right” answers.</li>
+            <li>Disagreement is likely; it is not unpleasantness or a competition in cleverness.</li>
+            <li>You don’t need to be a philosopher to be good at TOK. Being more confident to talk ≠ being more intelligent.</li>
+            <li>You will practise making your case, standing your ground and justifying your opinion in front of others.</li>
+          </ul></dd></div>
+      </dl>
+
+      <h3>Course structure</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Course</th><th>Content</th></tr></thead>
+        <tbody>
+          <tr><td><strong>TOK1</strong></td><td>The compulsory core theme: <strong>Knowledge and the knower</strong></td></tr>
+          <tr><td><strong>TOK2</strong></td><td>Optional themes (Religion, Technology, Language, Indigenous knowledge, Politics) + <strong>TOK Exhibition</strong></td></tr>
+          <tr><td><strong>TOK3</strong></td><td>Areas of knowledge: History, Human sciences, Natural sciences</td></tr>
+          <tr><td><strong>TOK4</strong></td><td>Areas of knowledge: Mathematics, the Arts + <strong>TOK Essay</strong></td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Marks</h3>
+      <ul>
+        <li>Max IB score is 45; <strong>3 points</strong> come from the EE and TOK combined.</li>
+        <li>TOK grade = <strong>Essay 67%</strong> (written in DP2, TOK4) + <strong>Exhibition 33%</strong> (DP1, TOK2).</li>
+        <li>You cannot get the diploma without passing the core components.</li>
+      </ul>
+
+      <h3>The core theme: Knowledge and the knower</h3>
+      <p>You will explore what it means to know and what knowledge is, examine the factors that shape how you make sense of the world, discover where your values come from and what shapes your perspectives, and reflect on how the communities you belong to shape how you construct, share and evaluate knowledge.</p>
+      <div class="q"><ul>
+        <li>What do the words BEAUTY, SUCCESS and NORMAL mean to you — and where did your understanding of them come from?</li>
+        <li>To what extent can you know yourself?</li>
+        <li>In what contexts is it possible for others to know you better than you know yourself?</li>
+      </ul></div>
+    </section>
+
+    <!-- LESSON 2 -->
+    <section id="knower">
+      <div class="lesson-tag">Lesson 2</div>
+      <h2>Who Is the Knower?</h2>
+      <p class="src">Source: TOK1 Lesson 2 “Who is the knower” slides + your notes</p>
+      <dl class="defs">
+        <div><dt>You as a knower</dt><dd>Knowledge cannot exist without some <strong>sentient being</strong> doing the knowing. Every time you learn, absorb or produce new knowledge, you are somehow affected by it.
+          <span class="ex">You learn about climate change in Biology (absorb), write an essay on it (produce), and then start cycling to school instead of being driven (it affects you).</span></dd></div>
+        <div><dt>Personal identity</dt><dd>The idea you have about yourself, which develops throughout your life (e.g. nationality, religion, political views, interests).
+          <ul><li>It is <strong>contingent</strong> and <strong>transient</strong> (see below).</li></ul>
+          <span class="ex">At 10 you might have seen yourself as “a football fan”; at 17 as “a future engineer who cares about the environment”.</span></dd></div>
+        <div><dt>Contingent <span class="only">only in your notes</span></dt><dd>Only true under certain conditions or contexts <span class="arrow">→</span> “true <em>if</em> X”.
+          <span class="ex">“I am a Finnish student” is only true <em>if</em> you live and study in Finland — move abroad and it changes.</span></dd></div>
+        <div><dt>Transient <span class="only">only in your notes</span></dt><dd>Temporary, prone to updates and replacements <span class="arrow">→</span> true for now.
+          <span class="ex">Until 2006, students learned there were 9 planets; then Pluto was reclassified and it became 8.</span></dd></div>
+        <div><dt>Personal knowledge</dt><dd>Sometimes acts as a bridge between our personal experiences and our personal identity. As you get more experiences, your knowledge grows and your identity develops.
+          <span class="ex">Volunteering at a hospital (experience) teaches you how patients are cared for (knowledge), and you start to see yourself as someone who wants to study medicine (identity).</span></dd></div>
+      </dl>
+
+      <svg viewBox="0 0 360 170" width="100%" style="max-width:380px;display:block;margin:16px auto" role="img" aria-label="Triangle linking experience, identity and knowledge, with arrows in both directions">
+        <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--accent)"/></marker></defs>
+        <text x="180" y="22" text-anchor="middle" font-weight="600">Experience</text>
+        <text x="40" y="152" text-anchor="middle" font-weight="600">Identity</text>
+        <text x="315" y="152" text-anchor="middle" font-weight="600">Knowledge</text>
+        <line class="ln" x1="160" y1="34" x2="55" y2="130" stroke-width="2" marker-start="url(#a)" marker-end="url(#a)"/>
+        <line class="ln" x1="200" y1="34" x2="300" y2="130" stroke-width="2" marker-start="url(#a)" marker-end="url(#a)"/>
+        <line class="ln" x1="90" y1="147" x2="262" y2="147" stroke-width="2" marker-start="url(#a)" marker-end="url(#a)"/>
+      </svg>
+      <p style="text-align:center;color:var(--muted);font-size:14px;margin-top:-6px">Slide task: give an example from your own life for each arrow, in each direction (six examples).</p>
+
+      <div class="q"><ul>
+        <li>What knowledge matters to you, and where do your values come from?</li>
+        <li>What things do you know that nobody else could know?</li>
+        <li>What knowledge do you consider important / not seek / not accept / are willing to “edit”?</li>
+      </ul></div>
+
+      <h3>Knowledge communities &amp; tribalism</h3>
+      <dl class="defs">
+        <div><dt>Knowledge community</dt><dd>Groups of people with common interests and shared knowledge.
+          <span class="ex">Your IB Chemistry class, a chess club, the community of climate scientists, an online forum of Minecraft builders.</span></dd></div>
+        <div><dt>Tribes</dt><dd>The groups you identify with most strongly. Your loyalty to and dependence on your tribe tends to influence you strongly, e.g. by shaping your perspectives.
+          <span class="ex">You’re in a chess club (a knowledge community), but your national identity or religion may be a tribe — part of who you <em>are</em>.</span></dd></div>
+        <div><dt>Tribalism</dt><dd>The inherent bias towards the group we identify with.
+          <span class="ex">Fans call a foul against their own player “obviously unfair”, but the same foul by their team “part of the game”.</span></dd></div>
+      </dl>
+      <div class="q"><ul>
+        <li>Is loyalty to your tribe a valid justification for taking a friend’s side in a dispute when you <em>know</em> they are wrong? Or is such bias unethical?</li>
+        <li>Is there a correlation between the groups that most shape your identity and the groups that most affect your emotions?</li>
+      </ul></div>
+
+      <h3>Conformity and the lack of it</h3>
+      <dl class="defs">
+        <div><dt>Conformity <span class="only">only in your notes</span></dt><dd>The tendency of individuals to change their behaviours, beliefs or attitudes to match the accepted norms of a group. It affects the individual knower and is linked to communities of knowers. One can also <em>not</em> conform.
+          <span class="ex"><strong>Solomon Asch’s line study</strong> (from the slides): participants gave an obviously wrong answer about which line was longest because everyone else in the room had. When even one other person disagreed with the group, the real participants stopped conforming.</span></dd></div>
+        <div><dt>Knowledge initially rejected</dt><dd>New ideas often face resistance before becoming widely <strong>shared knowledge</strong>. (Book: RLE Muhammad Ali 1.2, p. 6; exercise 1.3.)
+          <span class="ex">Ignaz Semmelweis said doctors should wash their hands between patients (1847). He was mocked and lost his job; only after germ theory (Pasteur, Lister) was the idea accepted.</span></dd></div>
+      </dl>
+      <div class="q"><ul>
+        <li>To what extent do our thoughts and ideas reflect those of the people around us? How do we decide when we need to “swim against the tide”?</li>
+        <li>What factors stop new knowledge from being accepted and becoming widely shared?</li>
+      </ul></div>
+    </section>
+
+    <!-- LESSON 4 -->
+    <section id="subobj">
+      <div class="lesson-tag">Lesson 4</div>
+      <h2>Subjectivity &amp; Objectivity</h2>
+      <p class="src">Source: TOK1 Lesson 4 Subjectivity and Objectivity slides + your notes</p>
+
+      <h3>The 12 key concepts</h3>
+      <p>They are the <strong>analytical tools</strong> for the whole course: in TOK you don’t study new subject facts, you examine <em>how</em> we know what we know.</p>
+      <div class="grid" style="margin-bottom:12px">
+        <div class="box"><h4>Why they matter</h4><ul>
+          <li><strong>Analytical vocabulary</strong> — precise language to dismantle and critique knowledge claims.</li>
+          <li><strong>Conceptual bridges</strong> — connect and compare areas of knowledge (e.g. the Arts and Natural sciences).</li>
+          <li><strong>Assessment</strong> — examiners explicitly look for them in the Essay and Exhibition.</li></ul></div>
+        <div class="box"><h4>How to use them</h4><ul>
+          <li><strong>Formulating KQs</strong> — e.g. “Is this news story fake?” <span class="arrow">→</span> “How does perspective influence the interpretation of historical events?”</li>
+          <li><strong>Analysing the framework</strong> — e.g. how <em>power</em> affects which scientific research gets funded.</li>
+          <li><strong>Evaluating claims</strong> — test justification, evidence and the limits of certainty.</li></ul></div>
+      </div>
+      <dl class="defs">
+        <div><dt>Certainty</dt><dd>How sure we are about a knowledge claim.
+          <span class="ex">Very certain that 2 + 2 = 4; fairly certain it will rain if the forecast says 90%; uncertain about what happened before the Big Bang.</span></dd></div>
+        <div><dt>Culture</dt><dd>The shared beliefs and values of a group that shape how we think.
+          <span class="ex">In some cultures, looking a teacher in the eye shows respect; in others it is rude.</span></dd></div>
+        <div><dt>Evidence</dt><dd>The data or facts used to back up a claim.
+          <span class="ex">“Smoking causes cancer” is backed up by decades of studies comparing smokers with non-smokers.</span></dd></div>
+        <div><dt>Explanation</dt><dd>How we make knowledge clear or show why something happens.
+          <span class="ex">Knowing <em>that</em> the sky is blue is a fact; showing <em>why</em> (blue light scatters most) is an explanation.</span></dd></div>
+        <div><dt>Interpretation</dt><dd>How we assign meaning to information or events.
+          <span class="ex">Two historians read the same 1914 letters — one blames Germany for WWI, the other the alliance system.</span></dd></div>
+        <div><dt>Justification</dt><dd>The reasons or logic given to accept a claim as valid.
+          <span class="ex">“The Earth is round because ships disappear hull-first over the horizon and we have photos from space.”</span></dd></div>
+        <div><dt>Objectivity</dt><dd>The pursuit of knowledge free from personal or cultural bias.
+          <span class="ex">A double-blind drug trial: neither patients nor doctors know who got the real medicine.</span></dd></div>
+        <div><dt>Perspective</dt><dd>A specific point of view shaped by background or context.
+          <span class="ex">A factory closing is “cost saving” to the owner and a “lost livelihood” to the worker.</span></dd></div>
+        <div><dt>Power</dt><dd>How influence and authority control what knowledge is shared or trusted.
+          <span class="ex">Governments decide what goes into school history textbooks.</span></dd></div>
+        <div><dt>Responsibility</dt><dd>The ethical duties tied to how we create and use knowledge.
+          <span class="ex">The scientists who discovered nuclear fission had to consider whether it should be used for weapons.</span></dd></div>
+        <div><dt>Truth</dt><dd>Whether a statement or belief matches actual reality.
+          <span class="ex">“Sydney is the capital of Australia” is false (it’s Canberra), however many people believe it.</span></dd></div>
+        <div><dt>Values</dt><dd>The inner worth or importance we place on certain ideas or actions.
+          <span class="ex">One person values free speech most, another social harmony — so they disagree about banning offensive posts.</span></dd></div>
+      </dl>
+
+      <h3>Types of knowledge</h3>
+      <div class="grid">
+        <div class="box"><h4>Procedural</h4><p>Knowledge of <strong>how</strong> to do something.</p>
+          <span class="ex">Riding a bike or coding (slide examples).</span></div>
+        <div class="box"><h4>Declarative</h4><p>Knowledge <strong>that</strong> something is true — facts, theories and assertions.</p>
+          <span class="ex">Knowing <em>that</em> water is H₂O, or <em>that</em> WWII ended in 1945.</span></div>
+        <div class="box"><h4>Experiential</h4><p>Knowledge by acquaintance, gained directly through personal perception and involvement with something.</p>
+          <span class="ex">Knowing what a mango tastes like.</span></div>
+      </div>
+
+      <h3>Subjective and objective perspectives</h3>
+      <dl class="defs">
+        <div><dt>Knowledge claim</dt><dd>A statement with which we claim to know something. As individual knowers, our perspective on claims is subjective and so open to personal bias.
+          <span class="ex">“I know that my school has 600 students.”</span></dd></div>
+        <div><dt>Subjective</dt><dd>A personal view influenced by the knower’s opinions, feelings or emotions.
+          <span class="ex">“This song is the best song ever written.”</span></dd></div>
+        <div><dt>Objective</dt><dd>A detached view that focuses on facts in a way largely independent of the knower’s personal perspective, and that <strong>expects to be corroborated by a knowledge community</strong>.
+          <span class="ex">“This song was streamed 2 billion times in 2024” — anyone can check it.</span></dd></div>
+        <div><dt>Michael Polanyi</dt><dd>People like to believe knowledge is objective (agreed by many people with no emotional attachment to it). But all knowledge claims rely on personal judgement to an extent — we can’t rid ourselves of the era and culture we live in.
+          <ul>
+            <li>Attempts to free knowledge from all assumptions (tribal, cultural, linguistic) are called a <strong>“view from nowhere”</strong>.</li>
+            <li><strong>But</strong> there is no view from nowhere: all knowledge is contextual and depends on knowers with assumptions and perspectives.</li>
+          </ul>
+          <span class="ex">19th-century scientists “measured” skulls to “prove” racial differences — their era’s assumptions shaped what they believed was objective.</span></dd></div>
+      </dl>
+
+      <h3>Fact, opinion or interpretation?</h3>
+      <div class="grid">
+        <div class="box"><h4>Fact</h4><p>Can be checked against evidence.</p><span class="ex">Water boils at 100 °C at sea level. The unemployment rate increased by 2%.</span></div>
+        <div class="box"><h4>Opinion</h4><p>Expresses a judgement or preference.</p><span class="ex">Shakespeare was the greatest writer of all time. Van Gogh’s <em>Sunflowers</em> is beautiful.</span></div>
+        <div class="box"><h4>Interpretation</h4><p>Explains meaning or offers an explanation of events.</p><span class="ex">History is written by the victors. Climate change is caused by human activity (an interpretation strongly supported by evidence).</span></div>
+      </div>
+
+      <h3>Objectivity in the DP subjects</h3>
+      <p>Models and theories discussed in class: Psychology — the “Four Horsemen of the Apocalypse” (Gottman); Economics — the Invisible Hand (Adam Smith) vs. government intervention; Chemistry — atomic models; Maths — imaginary numbers; History — Great Man theory vs. social history; English — reader-response theory.</p>
+      <div class="q"><ul>
+        <li>What makes this model/theory objective? What parts involve subjectivity or interpretation? What evidence supports it?</li>
+        <li>Assignment KQ: <strong>To what extent can a model/theory be claimed to be objective?</strong></li>
+      </ul></div>
+    </section>
+
+    <!-- LESSON 5 -->
+    <section id="evalinfo">
+      <div class="lesson-tag">Lesson 5</div>
+      <h2>Evaluating Information</h2>
+      <p class="src">Source: TOK1 Lesson 5 Evaluating information slides + your notes</p>
+      <p>The <strong>reliability</strong> of information and knowledge: we are presented with huge amounts of knowledge all the time — when, and how much, do we stop to check it?</p>
+      <dl class="defs">
+        <div><dt>Confirmation bias</dt><dd>We tend to be less sceptical about information on social media: it is our bubble, where our suspicions and beliefs are backed up.
+          <span class="ex">If you already think a diet works, you believe every success story and scroll past the studies against it — and the algorithm shows you even more success stories.</span></dd></div>
+        <div><dt>Propaganda</dt><dd>Advertising that promotes specific ideas and perspectives that are usually political.
+          <span class="ex">Wartime posters showing the enemy as monsters; state TV that only shows the leader being cheered.</span></dd></div>
+        <div><dt>Misinformation</dt><dd>Information that is distorted or only partially true.
+          <span class="ex">Your aunt shares “drinking hot water kills the virus” because she honestly believes it.</span></dd></div>
+        <div><dt>Disinformation</dt><dd>False information <strong>deliberately</strong> designed to mislead or confuse.
+          <span class="ex">A troll farm uses thousands of fake accounts to spread invented claims about an election candidate.</span></dd></div>
+        <div><dt>Fake news</dt><dd>Fabricated stories presented as genuine news items.
+          <span class="ex">A site made to look like the BBC publishes “Celebrity X arrested” — invented to get clicks.</span></dd></div>
+      </dl>
+      <div class="note">The key difference between misinformation and disinformation is <strong>intent</strong>: misinformation is usually spread without meaning to deceive; disinformation is spread on purpose. Propaganda is also wider than advertising — it includes any biased communication pushing a cause.</div>
+
+      <h3>Tools to check information</h3>
+      <ul>
+        <li><strong>Snopes</strong> — checks disinformation and urban legends from social media.</li>
+        <li><strong>The Big Project</strong> — finds media outlets around the world so you can compare different accounts of the same event.</li>
+        <li><strong>Information vs. ideas/arguments</strong> (book p. 9–10): first decide whether an article is <em>information</em> or an <em>idea/argument</em>, then evaluate it with the matching set of considerations.</li>
+      </ul>
+      <div class="q"><ul>
+        <li>Is assessing the reliability of information harder or easier today than 50 years ago? Argue both sides.</li>
+        <li>What criteria did you use to decide that something is an example of propaganda / misinformation / disinformation / fake news?</li>
+      </ul></div>
+    </section>
+
+    <!-- LESSON 6 -->
+    <section id="whatis">
+      <div class="lesson-tag">Lesson 6</div>
+      <h2>What Is Knowledge?</h2>
+      <p class="src">Source: TOK1 Lesson 6 What is knowledge slides + your notes</p>
+
+      <h3>Plato: Justified True Belief (JTB)</h3>
+      <dl class="defs">
+        <div><dt>Justified</dt><dd>Shown to be fair or reasonable.
+          <span class="ex">“It rained last night — the streets are wet and there are puddles everywhere.”</span></dd></div>
+        <div><dt>True</dt><dd>Logically consistent, honest, correct and accurate.
+          <span class="ex">“The Moon orbits the Earth” is true. “The Sun orbits the Earth” once seemed justified, but was never true — so never knowledge.</span></dd></div>
+        <div><dt>Belief</dt><dd>A feeling that what you think is true.
+          <span class="ex">You believe your friend is in Paris (belief), they are (true), and they sent you a photo at the Eiffel Tower today (justified) <span class="arrow">→</span> you <em>know</em> it.</span></dd></div>
+        <div><dt>“Beyond reasonable doubt” <span class="only">only in your notes</span></dt><dd>Used in courts <span class="arrow">→</span> how much certainty is enough?
+          <span class="ex">A jury can convict on DNA evidence + CCTV + a witness without being 100% certain.</span></dd></div>
+      </dl>
+      <div class="q"><ul>
+        <li>Is it possible to know something but not believe it? Would it still count as knowledge?</li>
+      </ul></div>
+
+      <dl class="defs">
+        <div><dt>Gettier case</dt><dd>A person can have a justified true belief and still fail to have knowledge, because their belief is true <strong>by luck</strong> — right for the wrong reasons.
+          <span class="ex">You look at a clock showing 3:00 and believe it’s 3:00. It is — but the clock stopped exactly 12 hours ago. Do you <em>know</em> the time?</span></dd></div>
+        <div><dt>God’s eye view</dt><dd>A hypothetical viewpoint from which objective truths can be perfectly perceived — also called an <strong>Archimedean point</strong>. The ideal of removing yourself from the object of study so you can see it in relation to everything else while staying independent of it: “seeing something completely from nowhere, with no bias, no feelings, no personal perspective.”
+          <span class="ex">Seeing a car accident from directly above with every detail, instead of from the pavement where a truck blocked half your view.</span>
+          <div class="q">Can we ever see reality objectively? Is a God’s eye view (A) possible in real life, (B) never possible, or (C) only an ideal we can get closer to?</div></dd></div>
+        <div><dt>Paradigm</dt><dd>A world view underlying the theories and methodology of a particular scientific subject. (Thomas Kuhn.)
+          <ul><li>Paradigm <span class="arrow">→</span> German <em>Paradebeispiel</em> (a model example) — a framework. <span class="only">only in your notes</span></li></ul>
+          <span class="ex">“The discovery of universal gravitation became the paradigm of successful science.”</span></dd></div>
+        <div><dt>Paradigm shift</dt><dd>A major change in how people think about and understand a topic — so big that the accepted explanations, methods or “common sense” no longer work, and a new framework replaces the old one.</dd></div>
+      </dl>
+
+      <h3>Paradigm shift examples (from the slides)</h3>
+      <div class="grid">
+        <div class="box"><h4>Natural sciences: Heliocentrism</h4><p>Old: Earth at the centre of the universe. New (Copernicus, later supported): the Sun at the centre — changing how motion and observations were explained.</p></div>
+        <div class="box"><h4>Psychology: Behaviourism</h4><p>Old: focus on inner mental states and introspection. New: study observable behaviour and measurable stimulus–response patterns.</p></div>
+        <div class="box"><h4>Politics: Nuclear weapons</h4><p>Old: wars could be fought without risk of total annihilation. New: nuclear deterrence and mutually assured destruction changed how nations understand “war”, “peace” and risk.</p></div>
+      </div>
+    </section>
+
+    <!-- LESSON 7 -->
+    <section id="types">
+      <div class="lesson-tag">Lesson 7</div>
+      <h2>Types &amp; Levels of Knowledge</h2>
+      <p class="src">Source: TOK1 Lesson 7 Types and levels of knowledge slides + your notes</p>
+
+      <h3>Bloom’s Taxonomy (revised)</h3>
+      <p>A way to describe how learning goes from basic to more complex thinking — like a ladder: at the bottom you learn facts, at the top you create new ideas. Slide example topic: <strong>photosynthesis</strong>.</p>
+      <ol class="bloom">
+        <li><span class="n">1</span><span class="t">Remember</span><span class="d">Memorise facts and key terms (define a word, list dates, recall a method).<br><em>Name the two raw materials plants use in photosynthesis.</em></span></li>
+        <li><span class="n">2</span><span class="t">Understand</span><span class="d">Explain ideas in your own words (summarise, describe a chart, explain a cause).<br><em>Explain in your own words how light helps a plant make glucose.</em></span></li>
+        <li><span class="n">3</span><span class="t">Apply</span><span class="d">Use what you learned in a new situation (solve a similar problem, use a formula).<br><em>A plant is kept in a dark cupboard for a week — predict what happens to its rate of photosynthesis and why.</em></span></li>
+        <li><span class="n">4</span><span class="t">Analyse</span><span class="d">Break things into parts and spot patterns (compare arguments, identify assumptions, separate evidence from opinion).<br><em>One plant has plenty of light but little CO₂, the other the opposite — which factor limits each?</em></span></li>
+        <li><span class="n">5</span><span class="t">Evaluate</span><span class="d">Judge using criteria: Is this good? Reliable? Strong evidence?<br><em>Judge the claim “Adding more light will always make a plant photosynthesise faster.”</em></span></li>
+        <li><span class="n">6</span><span class="t">Create</span><span class="d">Make something new (write your own theory, design a plan, produce an original research question or model).<br><em>Design an experiment to test whether light intensity affects photosynthesis.</em></span></li>
+      </ol>
+      <div class="note"><strong>Webb’s Depth of Knowledge (DoK)</strong> is similar but focuses on the actual difficulty/complexity of the task or prompt, not the type of thinking verb. <strong>You need to know the distinction for the exam!</strong> (Book p. 21, activity 2.3.)
+        <span class="ex">“List the planets” is low DoK; “Argue whether Pluto should be a planet, using evidence” is high DoK.</span></div>
+
+      <h3>Tacit vs. explicit knowledge</h3>
+      <div class="grid">
+        <div class="box"><h4>Tacit</h4><div class="sub">term from Michael Polanyi</div><p>Subjective, experiential knowledge that is difficult to express in words or communicate to others (e.g. craft skills, cognitive skills including your own perspective and values).</p>
+          <span class="ex">Explaining to a partner how to tie shoelaces without looking down (the slide exercise) — you can do it, but can’t easily put it into words.</span></div>
+        <div class="box"><h4>Explicit</h4><p>Knowledge that can be expressed in words or formulae (e.g. knowledge from books).</p>
+          <span class="ex">A recipe, the periodic table, IKEA instructions.</span></div>
+      </div>
+      <dl class="defs" style="margin-top:12px">
+        <div><dt>Centipede effect</dt><dd>Over-thinking an action so that it interferes with doing it.
+          <span class="ex">From the poem by Katherine Craster: a happy centipede is asked which leg moves after which, starts to think about it, and falls in a ditch, “not knowing how to run”.</span></dd></div>
+      </dl>
+
+      <h3>Bertrand Russell (1872–1970): acquaintance vs. description</h3>
+      <dl class="defs">
+        <div><dt>Knowledge by acquaintance</dt><dd>Direct experience that cannot be doubted — introspective experiences (feeling hungry), memory, and “universals” (e.g. roundness, beauty). Popular sense: knowledge acquired <strong>first-hand via our senses</strong>.
+          <span class="ex">“I know the taste of lemon because I’ve tasted one.”</span></dd></div>
+        <div><dt>Knowledge by description</dt><dd>About physical things such as people and places, which we can only know through descriptions. Popular sense: <strong>second-hand, mediated or inferential</strong> — from teachers or the news.
+          <span class="ex">“I know that lemons are sour because I’ve read that they taste that way.”</span></dd></div>
+      </dl>
+      <div class="note">Russell: we understand descriptions <em>because</em> we know their parts by acquaintance — so <strong>knowledge by acquaintance underpins all knowledge by description</strong>. Languages mark the difference: French <em>connaître</em> (first-hand, to be acquainted with) vs. <em>savoir</em> (to know a fact, second-hand).</div>
+
+      <h3>Levels of knowledge: breadth vs. depth</h3>
+      <span class="ex">Knowing a little about 20 languages (breadth) vs. speaking one fluently (depth). A GP has breadth; a heart surgeon has depth.</span>
+      <div class="q"><ul>
+        <li>The internet gives unlimited facts (and unlimited lies) instantly — does this mean the breadth of our knowledge expands easily?</li>
+        <li>How does the concept of falsehood link to the easy availability of knowledge?</li>
+        <li>With the web and AI, to what extent is depth or breadth more important?</li>
+      </ul></div>
+    </section>
+
+    <!-- KQs -->
+    <section id="kq">
+      <div class="lesson-tag">Knowledge questions</div>
+      <h2>Knowledge Questions (KQs)</h2>
+      <p class="src">Source: TOK1 KQs and map activity slides + Lesson 8 command terms slides + your notes</p>
+      <dl class="defs">
+        <div><dt>Knowledge question</dt><dd>A question about the nature of knowledge and what it means “to know”.
+          <ul>
+            <li>Focuses on TOK ideas rather than subject content, using TOK concepts like evidence, certainty, values and interpretation.</li>
+            <li>Originates in the real world and should be <strong>applicable to other real-world examples</strong>; even if philosophical, you must be able to bring it back to real situations and support it with real examples.</li>
+            <li><strong>Open-ended and contestable</strong> — different perspectives, claims and counterclaims.</li>
+            <li>May link areas of knowledge, themes and the four elements: scope, perspectives, methods &amp; tools, ethics.</li>
+          </ul></dd></div>
+      </dl>
+
+      <h3>From subject question to knowledge question</h3>
+      <p>Three levels of thinking: (1) something you encounter in a subject <span class="arrow">→</span> (2) a question about that subject <span class="arrow">→</span> (3) a question about how knowledge is acquired, justified, evaluated or used.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Example</th><th>Subject-specific question</th><th>Knowledge question</th><th>Key concepts</th></tr></thead>
+        <tbody>
+          <tr><td><strong>History</strong></td><td>Why do historians have different views of the 1917 October Revolution?</td><td>To what extent can we still have reliable historical knowledge if, given access to the same facts, experts can disagree?</td><td>Perspective, interpretation, objectivity</td></tr>
+          <tr><td><strong>Natural sciences</strong></td><td>Why does the mass of some elements (magnesium) increase when heated?</td><td>To what extent can we make accurate measurements that lead to reliable knowledge in the natural sciences?</td><td>Evidence, certainty, justification</td></tr>
+          <tr><td><strong>Maps</strong></td><td>How do cartographers create maps?</td><td>To what extent can knowledge be both accurate and useful?</td><td>Perspective, truth, values</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note">Moving to a KQ, questions become less about one subject or fact, more about the nature, production and limits of knowledge, open to different answers, and explorable with examples from several areas. We move from <strong>“what do we know?”</strong> to <strong>“how do we know?”</strong> and <strong>“how reliable is that knowledge?”</strong></div>
+
+      <h3>Map activity: can knowledge be both accurate and useful?</h3>
+      <dl class="defs">
+        <div><dt>Accuracy</dt><dd>How closely a map represents what it claims to represent.
+          <span class="ex">A satellite photo of Helsinki is very accurate about what the city looks like.</span></dd></div>
+        <div><dt>Usefulness</dt><dd>How effectively a map serves its intended purpose.
+          <span class="ex">The Helsinki metro map distorts distances and shapes, but is far more useful for finding your train.</span></dd></div>
+        <div><dt>“The map is not the territory”</dt><dd>A representation never captures reality completely. A map isn’t necessarily inaccurate because it leaves things out — it may be deliberately selective to fulfil its purpose. But the representations we use may <em>shape</em>, not just reflect, our knowledge of reality: we often mistake our models, maps and theories for reality itself.
+          <span class="ex">The Mercator projection makes Greenland look as big as Africa (Africa is ~14× larger) — useful for sea navigation, misleading about size.</span></dd></div>
+      </dl>
+      <div class="q"><ul>
+        <li>Accurate in what sense? Useful for whom, and for what purpose?</li>
+        <li>Who decides what is important enough to include? Does simplifying information necessarily make it less accurate?</li>
+        <li>Are accuracy and usefulness competing priorities, or can they complement each other?</li>
+      </ul></div>
+
+      <h3>Command terms in KQs</h3>
+      <p>Command words can be <strong>explicit</strong> or <strong>implicit</strong> — always check what the KQ is asking you to do.</p>
+      <span class="ex">“Why do we pursue and share knowledge?” <span class="arrow">→</span> explicit: <em>explain why</em>.<br>“In what ways should our values and ethical responsibilities influence how we produce and share knowledge?” <span class="arrow">→</span> implicit: <em>explore the various ways</em>.</span>
+    </section>
+
+    <!-- SCOPE -->
+    <section id="scope">
+      <div class="lesson-tag">Lesson 8</div>
+      <h2>The Knowledge Framework &amp; Scope</h2>
+      <p class="src">Source: TOK1 Lesson 8 KQs and KF scope slides + your notes</p>
+      <p>The <strong>knowledge framework (KF)</strong> is a tool for analysing and comparing areas of knowledge — like a map that helps you find your way and build links between them. <strong>Every KQ can be answered using its four strands.</strong></p>
+      <div class="grid">
+        <div class="box"><h4>Scope</h4><ul>
+          <li>What is this AOK or theme about? What makes it intriguing?</li>
+          <li>Its strengths and limitations?</li>
+          <li>What is studied, what problems can it solve? Where are its frontiers?</li>
+          <li>Current open, unanswered or contentious questions?</li></ul>
+          <span class="ex">History studies the human past. Limitation: most ordinary people in the past left no records.</span></div>
+        <div class="box"><h4>Perspectives</h4><ul>
+          <li>Role of the individual knower, and of the individual within the community of knowers?</li>
+          <li>How important are different perspectives? What responsibilities do contributors have?</li>
+          <li>Key concepts, key terms and metaphors?</li></ul>
+          <span class="ex">A British and an Indian historian may describe British rule in India very differently.</span></div>
+        <div class="box"><h4>Methods &amp; tools</h4><ul>
+          <li>Conventions and rituals? Methods and procedures?</li>
+          <li>Skills or initiations needed? Underlying assumptions?</li>
+          <li>Role of models? Role of technology?</li></ul>
+          <span class="ex">Historians compare primary sources, check who wrote them and why, and cite evidence in footnotes.</span></div>
+        <div class="box"><h4>Ethics</h4><ul>
+          <li>What ethical considerations or responsibilities arise in the pursuit of knowledge within this AOK?</li></ul>
+          <span class="ex">Should a historian publish a diary revealing secrets of people whose grandchildren are still alive?</span></div>
+      </div>
+
+      <h3>Scope in detail</h3>
+      <dl class="defs">
+        <div><dt>Scope</dt><dd>The subject content of an area of knowledge: what it tries to know, why that matters, and where its boundaries are. It looks at how the area fits into the whole of human knowledge, the problems it addresses, and how.
+          <ul>
+            <li>What is the AOK about, what defines its shared knowledge, and why do we seek knowledge in it?</li>
+            <li>The extent of the AOK, its limits, and how it sits within the total of knowledge.</li>
+          </ul>
+          <span class="ex">Mathematics is about ideas such as shape, number and pattern.</span></dd></div>
+        <div><dt>What shapes your view of scope</dt><dd>Personal experience, the IB curriculum, culture, type of education.
+          <span class="ex">If your school taught only European history, you may assume “history” means mainly European history.</span></dd></div>
+        <div><dt>Applications</dt><dd>Different AOKs (and fields within them) have different applications.
+          <span class="ex">Making sure a bridge won’t collapse (physics, maths); understanding human consciousness (psychology); solving the climate crisis (natural and human sciences).</span></dd></div>
+      </dl>
+    </section>
+
+    <!-- PERSPECTIVES -->
+    <section id="persp">
+      <div class="lesson-tag">Lesson 10</div>
+      <h2>Knowledge Framework: Perspectives</h2>
+      <p class="src">Source: TOK1 Lesson 10 KF perspectives slides + your notes</p>
+      <dl class="defs">
+        <div><dt>Perspective</dt><dd>= viewpoint. Each knower has a unique perspective on the world, and hence on knowledge.
+          <span class="ex">A farmer and a tourist on the same rainy day: “good for the crops” vs. “ruined holiday”.</span></dd></div>
+        <div><dt>Influences on perspective</dt><dd>As well as individual context and history: faith, paradigms and laws. Perspective is also <strong>historical</strong> — the shared knowledge accepted in any community changes over time.
+          <span class="ex">Your grandparents at 17 probably had very different views on gender roles or the environment — largely because of the historical context.</span></dd></div>
+      </dl>
+
+      <h3>Hofstede’s cultural dimensions</h3>
+      <p>A framework for comparing broad patterns in cultural values across countries. Hofstede built it from <strong>surveys of IBM employees in different countries (1967–1973)</strong>, using statistics to find recurring patterns (four original dimensions; long-term orientation and indulgence were added later). The dimensions come from patterns in survey data — <strong>they are not fixed rules about how every person in a country thinks or behaves</strong>.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Dimension</th><th>Meaning</th><th>High ↑ / Low ↓</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Power distance</strong></td><td>Attitudes toward hierarchy and inequality.</td><td>↑ the less powerful expect and accept unequal power</td><td>High: Malaysian students rarely question teachers. Low: Danish students use teachers’ first names and debate them.</td></tr>
+          <tr><td><strong>Individualism – collectivism</strong></td><td>Emphasis on individual vs. group ties.</td><td>↑ “I”, loose ties<br>↓ “we”, strong ties</td><td>High: USA — choose a career for personal fulfilment. Low: China — family expectations matter more.</td></tr>
+          <tr><td><strong>Masculinity – femininity</strong> <small>(“motivation towards achievement &amp; success”)</small></td><td>Competition and achievement vs. care and cooperation.</td><td>↑ competitive<br>↓ cooperation, modesty</td><td>High: Japan. Low: Sweden — bragging is frowned upon.</td></tr>
+          <tr><td><strong>Uncertainty avoidance</strong></td><td>Responses to ambiguity — control the future or let it happen?</td><td>↑ threatened by the unknown<br>↓ accept ambiguity</td><td>High: Greece, Japan — detailed rules and plans. Low: Singapore — comfortable improvising.</td></tr>
+          <tr><td><strong>Long-term – short-term orientation</strong></td><td>Approaches to time and tradition.</td><td>↑ open to change, preparing for the future<br>↓ traditional, quick results, past &amp; present</td><td>High: saving for decades, investing in education. Low: honouring traditions, expecting quick profits.</td></tr>
+          <tr><td><strong>Indulgence – restraint</strong></td><td>Attitudes toward enjoyment and self-control.</td><td>↑ indulgence<br>↓ restraint</td><td>High: Mexico — enjoying leisure is valued. Low: Russia — controlling desires is valued.</td></tr>
+        </tbody>
+      </table></div>
+
+      <dl class="defs" style="margin-top:12px">
+        <div><dt>Ecological fallacy</dt><dd>Wrongly assuming that what is true of a <strong>group on average</strong> is true of every <strong>individual</strong> in it. This is the key limitation of Hofstede: country scores describe averages, not people.
+          <span class="ex">Japan scores high on collectivism, so assuming your Japanese classmate must dislike standing out is an ecological fallacy — they may be very individualistic.</span></dd></div>
+      </dl>
+
+      <h3>Case study: the international project meeting</h3>
+      <p>Anna (Germany) arrives with an agenda and openly criticises weak ideas; Marcus (USA) volunteers to lead and says “let’s be flexible”; Luana (Brazil) wants to get to know each other first and avoids open conflict; Kenji (Japan) says “That may be difficult” — meaning serious disagreement — and later waits for clearer instructions from the leader.</p>
+      <span class="ex">A cultural reading: Kenji’s indirectness fits collectivism and high power distance; Anna’s plan fits high uncertainty avoidance. A non-cultural reading: Kenji may simply be shy, anxious about his English, or new to group work. Both are possible — avoid treating one culture as if everyone shares one perspective.</span>
+      <div class="q"><ul>
+        <li>When does a cultural framework improve our understanding of behaviour, and when does it turn a useful generalisation into a stereotype?</li>
+        <li>To what extent can we understand another person’s perspective without imposing our own cultural assumptions?</li>
+        <li>How does our cultural perspective influence the way we interpret an object?</li>
+        <li>Open-minded vs. internationally-minded: to what extent are they the same?</li>
+      </ul></div>
+    </section>
+
+    <!-- TOOLS -->
+    <section id="tools">
+      <div class="lesson-tag">Lesson 11</div>
+      <h2>Knowledge Framework: Methods &amp; Tools</h2>
+      <p class="src">Source: Lesson 11 KF tools and methods slides + your notes</p>
+      <p>In TOK, “methods and tools” are the ways people <strong>produce, test, justify, communicate and challenge</strong> knowledge. Key question: <em>What methods and tools are used to create knowledge in this area, and how reliable or limited are they?</em></p>
+      <dl class="defs">
+        <div><dt>Method</dt><dd>A systematic way of investigating or developing knowledge. Being systematic does <strong>not</strong> make it automatically reliable — ask: what assumptions does it make? What can it show and not show? Who decides if it worked? How might bias affect results?
+          <span class="ex">Experiments, analysing historical documents, interviews, surveys, mathematical proof, interpreting a poem or religious text, observing behaviour, statistical analysis, testing a hypothesis, corroborating evidence from several sources.</span></dd></div>
+        <div><dt>Tools (ways of knowing)</dt><dd>The mental, emotional, linguistic or perceptual resources used in knowing.
+          <span class="ex">A historian uses memory, language and reason as <em>tools</em>, and source evaluation and corroboration as <em>methods</em>.</span></dd></div>
+      </dl>
+
+      <h3>Tools: what they contribute and their limits</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Tool</th><th>Contributes</th><th>Possible limitation</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Memory</strong></td><td>Preserves personal and collective experiences</td><td>Can be selective, reconstructed or distorted</td></tr>
+          <tr><td><strong>Emotion</strong></td><td>Draws attention to values, suffering and moral importance</td><td>Can produce bias or cloud judgement</td></tr>
+          <tr><td><strong>Language</strong></td><td>Communicates, categorises and shapes knowledge</td><td>Can be ambiguous, persuasive or culturally limited</td></tr>
+          <tr><td><strong>Reason</strong></td><td>Links ideas logically and evaluates consistency</td><td>Depends on the quality of its assumptions</td></tr>
+          <tr><td><strong>Sense perception</strong></td><td>Gives access to observations and experiences</td><td>Can be misleading, incomplete or subjective</td></tr>
+          <tr><td><strong>Imagination</strong></td><td>Lets us consider possibilities beyond direct experience</td><td>Imagined ideas need justification or evidence</td></tr>
+          <tr><td><strong>Intuition</strong></td><td>Produces rapid judgements or insights</td><td>May be difficult to explain or verify</td></tr>
+          <tr><td><strong>Faith</strong></td><td>Allows commitment to claims that may not be empirically proven</td><td>May resist criticism or independent testing</td></tr>
+          <tr><td><strong>Evidence</strong></td><td>Supports or challenges a claim</td><td>May be incomplete or selectively presented</td></tr>
+          <tr><td><strong>Consensus</strong></td><td>Provides social confirmation</td><td>Groups can reinforce errors</td></tr>
+        </tbody>
+      </table></div>
+      <p style="margin-bottom:8px">Full list of tools for acquiring, interpreting, justifying and communicating knowledge:</p>
+      <div class="chips">
+        <span class="chip hl">Evidence</span><span class="chip hl">Authority</span><span class="chip hl">Consensus</span><span class="chip hl">Intuition</span>
+        <span class="chip">Reasoning</span><span class="chip">Emotion</span><span class="chip">Memory</span><span class="chip">Imagination</span>
+        <span class="chip">Language</span><span class="chip">Measurement</span><span class="chip">Technology</span><span class="chip">Personal experience</span>
+      </div>
+
+      <h3>What is a “good reason” to accept a claim?</h3>
+      <p>Slide exercise — claim: <em>“This photograph shows a dangerous situation.”</em> Rank these reasons:</p>
+      <div class="grid">
+        <div class="box"><h4>Intuition</h4><p>“I immediately felt that something was wrong.”</p></div>
+        <div class="box"><h4>Evidence</h4><p>“There is visible smoke, damaged property and people running.”</p></div>
+        <div class="box"><h4>Authority</h4><p>“A trained emergency responder said it was dangerous.”</p></div>
+        <div class="box"><h4>Consensus</h4><p>“Everyone in the group agreed that it looked dangerous.”</p></div>
+      </div>
+      <div class="q"><ul>
+        <li>Is one type of justification always stronger than the others? Could an apparently convincing reason still be unreliable?</li>
+        <li>Use qualified conclusions: “We accept the claim <em>provisionally</em> because…”, “…convincing in some contexts, but not universally.”</li>
+      </ul></div>
+
+      <h3>Inductive &amp; deductive reasoning</h3>
+      <p>Reasoning is the tool that moves us from evidence or premises to a conclusion.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th></th><th>Deductive</th><th>Inductive</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Direction</strong></td><td>General rule <span class="arrow">→</span> specific case</td><td>Specific observations <span class="arrow">→</span> general conclusion</td></tr>
+          <tr><td><strong>Conclusion</strong></td><td>If the premises are true and the reasoning valid, it <strong>must</strong> be true</td><td><strong>Probable</strong>, not certain; open to revision</td></tr>
+          <tr><td><strong>Example</strong></td><td>All metals expand when heated. Copper is a metal. <span class="arrow">→</span> Copper expands when heated.<br>All mammals are warm-blooded. Whales are mammals. <span class="arrow">→</span> Whales are warm-blooded.</td><td>The last five swans I saw were white <span class="arrow">→</span> all swans are probably white (black swans exist in Australia!).<br>The sun has risen every morning so far <span class="arrow">→</span> it will probably rise tomorrow.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><strong>Is one better?</strong> Neither is automatically better. Deduction is only certain if its premises are true; induction is common in science and everyday life because it lets us generalise from evidence. It depends on the type of claim and the quality of the premises or evidence.</div>
+
+      <h3>Reasoning links to other tools</h3>
+      <ul>
+        <li><strong>Evidence</strong> — induction depends on observations or patterns in evidence.</li>
+        <li><strong>Assumptions</strong> — deduction depends on the truth of its starting premises.
+          <span class="ex">“All teenagers are lazy. Sam is a teenager. So Sam is lazy.” Valid logic, false premise.</span></li>
+        <li><strong>Authority</strong> — experts may use induction or deduction to support claims.</li>
+        <li><strong>Consensus</strong> — a conclusion may be accepted when different people independently reach it by similar reasoning.</li>
+        <li><strong>Intuition</strong> — may be based on rapid, unconscious inductive reasoning, though hard to explain or justify (“System 1” thinking, Daniel Kahneman).
+          <span class="ex">You walk into a room and instantly “feel” that your friends were just arguing.</span></li>
+      </ul>
+      <div class="q"><ul>
+        <li>“A good reason is not necessarily a certain reason.” Discuss.</li>
+        <li>“The reliability of a tool for acquiring knowledge depends on the context in which it is used.” To what extent do you agree?</li>
+      </ul></div>
+    </section>
+
+    <!-- RELATIVISM (notes only) -->
+    <section id="relativism">
+      <div class="lesson-tag">Key topic</div>
+      <h2>Relativism &amp; Absolutism</h2>
+      <p class="src">Source: your handwritten notes; the Ethics slides refer to relativism and cultural relativism</p>
+      <dl class="defs">
+        <div><dt>Relativity</dt><dd>Recognising that knowledge claims depend on contextual factors, frames or references.
+          <span class="ex">“The train is moving at 100 km/h” — relative to the ground. To a passenger, their coffee cup isn’t moving at all.</span></dd></div>
+        <div><dt>Relativism</dt><dd>The belief that what is true or right for one person or group is not necessarily true or right for another <span class="arrow">→</span> all truths are of equal value.
+          <span class="ex">“Eating meat is wrong for a Hindu vegetarian but fine for a Mongolian herder — neither is more correct.”</span></dd></div>
+        <div><dt>Absolutism</dt><dd>Belief in absolute truth and absolute cultural, religious, political and moral standards against which all other views can be judged.
+          <span class="ex">“Torture is always wrong, in every culture and situation, no exceptions.”</span></dd></div>
+        <div><dt>Cultural relativism</dt><dd>Shows how culture influences the way we produce, interpret and evaluate knowledge; beliefs, values and practices should be understood within their cultural context. Encourages <strong>intellectual humility</strong>: think before judging another society (criticism is still allowed).
+          <span class="ex">Eating with your hands may look impolite to a European, but in India or Ethiopia it’s normal and has its own etiquette.</span></dd></div>
+        <div><dt>Ethnocentrism</dt><dd>Thinking that your own culture is superior.
+          <span class="ex">Colonial-era Europeans calling other societies “primitive”.</span></dd></div>
+      </dl>
+      <div class="note"><strong>Tension:</strong> respect for cultural differences vs. universal judgement (e.g. human rights apply to everyone regardless of culture).</div>
+    </section>
+
+    <!-- TRUTH (notes only) -->
+    <section id="truth">
+      <div class="lesson-tag">Theories of truth</div>
+      <h2>Theories of Truth <span class="only">only in your notes</span></h2>
+      <p class="src">Source: your handwritten notes. Running example: <strong>“It is raining outside.”</strong></p>
+      <div class="grid">
+        <div class="box"><h4>Correspondence</h4><div class="sub">Aristotle</div>
+          <p>True if it corresponds to a fact — a relation with the real world.</p>
+          <span class="ex">True if you look outside and water really is falling.</span></div>
+        <div class="box"><h4>Coherence</h4>
+          <p>True if it fits consistently into our overall system of beliefs — a relation within a set of beliefs.</p>
+          <span class="ex">It fits everything else: the forecast said rain, people have umbrellas, you hear drops on the roof.</span></div>
+        <div class="box"><h4>Pragmatic</h4><div class="sub">William James</div>
+          <p>True if it is useful and works in practice.</p>
+          <span class="ex">Acting on it works: you take an umbrella and stay dry.</span></div>
+        <div class="box"><h4>Consensus</h4>
+          <p>True if the majority of people believe it.</p>
+          <span class="ex">Everyone in the room agrees. Problem: most people once agreed the Earth was flat.</span></div>
+        <div class="box"><h4>Pluralist</h4>
+          <p>Truth has multiple meanings depending on the context or area of knowledge.</p>
+          <span class="ex">Science: matching observation. Maths: fitting the axioms.</span></div>
+        <div class="box"><h4>Redundancy</h4><div class="sub">Frank Ramsey</div>
+          <p>“It is true that p” means exactly the same as “p” — the word “true” adds nothing.</p>
+          <span class="ex">“It is true that it is raining” = “It is raining.”</span></div>
+      </div>
+    </section>
+
+    <!-- ETHICS -->
+    <section id="ethics">
+      <div class="lesson-tag">Lessons 12 + 13</div>
+      <h2>Ethics</h2>
+      <p class="src">Source: TOK1 Lesson 12 and 13 Ethics slides + your notes</p>
+      <dl class="defs">
+        <div><dt>Ethics in TOK</dt><dd>Concerned with whether or not we can have <strong>moral knowledge</strong>, and what the best course of action is under different ethical systems.
+          <span class="ex">Can we <em>know</em> stealing is wrong the way we know 2 + 2 = 4? Would every system agree that stealing bread for a starving child is wrong?</span></dd></div>
+        <div><dt>Relativism in ethics</dt><dd>Right and wrong differ between countries and cultures. If we can’t agree, is ethics just personal opinion?
+          <span class="ex">Eating beef is ordinary in Finland but deeply wrong for many Hindus in India.</span></dd></div>
+        <div><dt>Agency</dt><dd>Conscious, social beings making intentional, often difficult decisions about how to act in the real world.
+          <span class="ex">You see a classmate being bullied and choose whether to step in, tell a teacher or stay silent.</span></dd></div>
+        <div><dt>Rules ≠ morals</dt><dd>Rules and conventions guide us towards “right” behaviour, but rules are not morals — and <strong>ethics is not the same as manners and convention</strong>.
+          <span class="ex">Racial segregation in the US was once the law; following it was legal but not moral. Eating with your elbows on the table breaks a convention, not an ethical rule.</span></dd></div>
+        <div><dt>Conscience</dt><dd>Our personal awareness of what is right and wrong. Our <strong>social conscience</strong> is our awareness of our ethical obligations and responsibilities towards others.
+          <span class="ex">The guilty feeling after lying to a friend, even if nobody found out.</span>
+          <div class="q">To what extent does your idea of right and wrong come from your conscience, and to what extent is your conscience just what you’ve been taught?</div></dd></div>
+        <div><dt>Altruism <span class="only">only in your notes</span></dt><dd>Helping others over oneself, with no benefit to oneself, even at a cost.
+          <span class="ex">Donating a kidney to a stranger.</span></dd></div>
+      </dl>
+
+      <h3>Methods for gaining ethical knowledge</h3>
+      <div class="grid">
+        <div class="box"><h4>Reason</h4><p>There can be rational reasons for our feelings of right and wrong; general moral principles (e.g. the Golden Rule); a biological basis for cooperation, pro-social behaviour, altruism and selfishness. Not always clear-cut.</p>
+          <span class="ex">Euthanasia: the Hippocratic oath vs. the patient’s own wish.</span></div>
+        <div class="box"><h4>Emotion / intuition</h4><p>Repulsion towards horrific acts; “gut feeling”. Can these ever be a reliable measure of right and wrong?</p>
+          <span class="ex">“Sniffy the Rat” (early 1990s): artist Rick Gibson planned to crush a pet-shop rat (which might otherwise have been snake food) to start a debate on killing animals. Activists rescued it — emotion vs. reason.</span></div>
+        <div class="box"><h4>Faith</h4><p>God-given codes or divine commands. The <strong>Golden Rule</strong> (since Confucius): treat others as you would like to be treated. But faith and morality are distinct — being religious isn’t the same as being moral; arguably how we live matters more than what we believe.</p>
+          <span class="ex">Horrific acts committed “in the name of religion”, including modern terrorism.</span></div>
+      </div>
+
+      <h3>Ethical frames</h3>
+      <p><strong>In short:</strong> utilitarianism focuses on <em>consequences</em>, deontology on <em>duties</em>, virtue ethics on <em>character</em>.</p>
+      <div class="grid">
+        <div class="box"><h4>Utilitarianism</h4><div class="sub">consequences</div>
+          <p>An action is right if it produces the greatest overall happiness or benefit for the greatest number of people.</p>
+          <span class="ex">A doctor gives a scarce treatment to the patient most likely to recover. Pop culture: Thanos (<em>Infinity War</em>) wipes out half of life to “prevent suffering” — utilitarian reasoning, but a deeply questionable calculation.</span></div>
+        <div class="box"><h4>Deontology</h4><div class="sub">duties</div>
+          <p>An action is right or wrong based on duties, rules or principles — not only its consequences.</p>
+          <span class="ex">You shouldn’t lie even if lying gives a better outcome, because honesty is a duty. Pop culture: Harry Potter refuses to kill even when it would be strategically useful.</span></div>
+        <div class="box"><h4>Virtue ethics</h4><div class="sub">character</div>
+          <p>An action is right if it reflects good character traits or virtues such as honesty, courage, compassion and fairness.</p>
+          <span class="ex">You return a lost wallet because an honest, responsible person would. Pop culture: Atticus Finch (<em>To Kill a Mockingbird</em>) defends Tom Robinson with courage and integrity despite social pressure.</span></div>
+      </div>
+
+      <h3>Categorical imperative — Immanuel Kant</h3>
+      <p>An objective, rationally necessary and unconditional principle that all rational agents must follow, despite any desires to the contrary: <strong>“Act only on a maxim you could will to become a universal law.”</strong></p>
+      <span class="ex">Your rule: “I may make promises I don’t intend to keep.” If <em>everyone</em> did this, nobody would believe promises, so promising would stop existing — the rule defeats itself. So breaking promises is wrong.</span>
+
+      <h3>Scenarios for applying the frames</h3>
+      <div class="grid">
+        <div class="box"><h4>1. The runaway trolley</h4><p>Pull a lever to divert a trolley from five people onto one person?</p></div>
+        <div class="box"><h4>2. The stolen medicine</h4><p>A parent can’t afford medicine that would save their child; should they steal it?</p></div>
+        <div class="box"><h4>3. The group project</h4><p>A member did almost no work because of serious problems at home — give equal credit, report them, or leave their name off?</p></div>
+      </div>
+      <div class="note">Method: list the possible actions <span class="arrow">→</span> apply each frame <span class="arrow">→</span> compare whether they agree <span class="arrow">→</span> judge which is most convincing. A good outcome doesn’t automatically make an action morally right.</div>
+
+      <h3>Knowledge questions on ethics</h3>
+      <ul>
+        <li>Are there responsibilities that necessarily come with knowing something or knowing how to do something?</li>
+        <li>Is it justified for ethical considerations to limit the production of knowledge?</li>
+        <li>Do knowers have a moral duty to examine their own filters?</li>
+        <li>Under what circumstances, if any, do we have a moral duty to share what we know?</li>
+        <li>In what ways do ethical judgements differ from other kinds of judgements?</li>
+        <li>Can moral disagreements be resolved with reference to empirical evidence?</li>
+        <li>Is there such a thing as a moral fact?</li>
+        <li>If moral claims conflict, does it follow that all views are equally acceptable?</li>
+        <li>What personal traits do we need to be ethical knowers?</li>
+      </ul>
+    </section>
+
+    <!-- ASSESSMENT -->
+    <section id="assess">
+      <div class="lesson-tag">Assessment</div>
+      <h2>Essay Titles &amp; Exhibition Prompts</h2>
+      <p class="src">Source: Lesson 8 and Lesson 7 slides</p>
+
+      <h3>May 2027 TOK essay prescribed titles</h3>
+      <ol>
+        <li>Do we gain a better appreciation of the human experience from the artist or the historian? (The arts and history.)</li>
+        <li>If values change over time, how can they, nevertheless, continue to guide the pursuit of knowledge? (Two AOKs.)</li>
+        <li>In the production of knowledge, how can knowledge be reliable if it is built on assumptions? (Human sciences + one other AOK.)</li>
+        <li>To what extent do you agree that “any coincidence is worth noticing; you can throw it away later if it is only a coincidence” (Agatha Christie)? (Mathematics + one other AOK.)</li>
+        <li>When choosing one explanation over another, to what extent should simplicity be prioritised? (Two AOKs.)</li>
+        <li>In the pursuit of knowledge, what value is there in exploring the paradoxical or the counterintuitive? (Natural sciences + one other AOK.)</li>
+      </ol>
+
+      <h3>The 35 IA (exhibition) prompts</h3>
+      <details>
+        <summary>Show all prompts</summary>
+        <ol class="prompts">
+          <li>What counts as knowledge?</li>
+          <li>Are some types of knowledge more useful than others?</li>
+          <li>What features of knowledge have an impact on its reliability?</li>
+          <li>On what grounds might we doubt a claim?</li>
+          <li>What counts as good evidence for a claim?</li>
+          <li>How does the way that we organize or classify knowledge affect what we know?</li>
+          <li>What are the implications of having, or not having, knowledge?</li>
+          <li>To what extent is certainty attainable?</li>
+          <li>Are some types of knowledge less open to interpretation than others?</li>
+          <li>What challenges are raised by the dissemination and/or communication of knowledge?</li>
+          <li>Can new knowledge change established values or beliefs?</li>
+          <li>Is bias inevitable in the production of knowledge?</li>
+          <li>How can we know that current knowledge is an improvement upon past knowledge?</li>
+          <li>Does some knowledge belong only to particular communities of knowers?</li>
+          <li>What constraints are there on the pursuit of knowledge?</li>
+          <li>Should some knowledge not be sought on ethical grounds?</li>
+          <li>In what ways do values affect the production of knowledge?</li>
+          <li>Why do we seek knowledge?</li>
+          <li>Are some things unknowable?</li>
+          <li>What counts as a good justification for a claim?</li>
+          <li>What is the relationship between personal experience and knowledge?</li>
+          <li>What is the relationship between knowledge and culture?</li>
+          <li>What role do experts play in influencing our consumption or acquisition of knowledge?</li>
+          <li>How important are material tools in the production or acquisition of knowledge?</li>
+          <li>How might the context in which knowledge is presented influence whether it is accepted or rejected?</li>
+          <li>How can we distinguish between knowledge, belief and opinion?</li>
+          <li>Does our knowledge depend on our interactions with other knowers?</li>
+          <li>Does all knowledge impose ethical obligations on those who know it?</li>
+          <li>To what extent is objectivity possible in the production or acquisition of knowledge?</li>
+          <li>Who owns knowledge?</li>
+          <li>What role does imagination play in producing knowledge about the world?</li>
+          <li>How can we judge when evidence is adequate?</li>
+          <li>What makes a good explanation?</li>
+          <li>How is current knowledge shaped by its historical development?</li>
+          <li>In what ways do our values affect our acquisition of knowledge?</li>
+        </ol>
+      </details>
+
+      <h3>Checklist for exhibition writing (peer feedback slide)</h3>
+      <ul>
+        <li>Have the instructions been followed?</li>
+        <li>Is the writing clear — can you “get it” in one reading?</li>
+        <li>Is there a clear answer to the chosen prompt?</li>
+        <li>Is the specific context of the object used in the answer?</li>
+        <li>Does the conclusion justify using <em>this</em> object for <em>this</em> prompt?</li>
+      </ul>
+    </section>
+  </main>
+</div>
+</body>
+</html>
